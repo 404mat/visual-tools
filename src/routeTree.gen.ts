@@ -9,8 +9,20 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as RadiusFinderRouteImport } from './routes/radius-finder'
+import { Route as ColorPickerRouteImport } from './routes/color-picker'
 import { Route as IndexRouteImport } from './routes/index'
 
+const RadiusFinderRoute = RadiusFinderRouteImport.update({
+  id: '/radius-finder',
+  path: '/radius-finder',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ColorPickerRoute = ColorPickerRouteImport.update({
+  id: '/color-picker',
+  path: '/color-picker',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -19,28 +31,50 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/color-picker': typeof ColorPickerRoute
+  '/radius-finder': typeof RadiusFinderRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/color-picker': typeof ColorPickerRoute
+  '/radius-finder': typeof RadiusFinderRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/color-picker': typeof ColorPickerRoute
+  '/radius-finder': typeof RadiusFinderRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths: '/' | '/color-picker' | '/radius-finder'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/color-picker' | '/radius-finder'
+  id: '__root__' | '/' | '/color-picker' | '/radius-finder'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ColorPickerRoute: typeof ColorPickerRoute
+  RadiusFinderRoute: typeof RadiusFinderRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/radius-finder': {
+      id: '/radius-finder'
+      path: '/radius-finder'
+      fullPath: '/radius-finder'
+      preLoaderRoute: typeof RadiusFinderRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/color-picker': {
+      id: '/color-picker'
+      path: '/color-picker'
+      fullPath: '/color-picker'
+      preLoaderRoute: typeof ColorPickerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -53,6 +87,8 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ColorPickerRoute: ColorPickerRoute,
+  RadiusFinderRoute: RadiusFinderRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
