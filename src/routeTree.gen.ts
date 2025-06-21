@@ -10,33 +10,53 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as TRadiusFinderRouteImport } from './routes/t/radius-finder'
+import { Route as TColorPickerRouteImport } from './routes/t/color-picker'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const TRadiusFinderRoute = TRadiusFinderRouteImport.update({
+  id: '/t/radius-finder',
+  path: '/t/radius-finder',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TColorPickerRoute = TColorPickerRouteImport.update({
+  id: '/t/color-picker',
+  path: '/t/color-picker',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/t/color-picker': typeof TColorPickerRoute
+  '/t/radius-finder': typeof TRadiusFinderRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/t/color-picker': typeof TColorPickerRoute
+  '/t/radius-finder': typeof TRadiusFinderRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/t/color-picker': typeof TColorPickerRoute
+  '/t/radius-finder': typeof TRadiusFinderRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths: '/' | '/t/color-picker' | '/t/radius-finder'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/t/color-picker' | '/t/radius-finder'
+  id: '__root__' | '/' | '/t/color-picker' | '/t/radius-finder'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  TColorPickerRoute: typeof TColorPickerRoute
+  TRadiusFinderRoute: typeof TRadiusFinderRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +68,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/t/radius-finder': {
+      id: '/t/radius-finder'
+      path: '/t/radius-finder'
+      fullPath: '/t/radius-finder'
+      preLoaderRoute: typeof TRadiusFinderRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/t/color-picker': {
+      id: '/t/color-picker'
+      path: '/t/color-picker'
+      fullPath: '/t/color-picker'
+      preLoaderRoute: typeof TColorPickerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  TColorPickerRoute: TColorPickerRoute,
+  TRadiusFinderRoute: TRadiusFinderRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

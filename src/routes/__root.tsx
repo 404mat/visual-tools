@@ -1,16 +1,33 @@
-import { createRootRoute, Outlet } from '@tanstack/react-router';
-import { TanStackRouterDevtools } from '@tanstack/react-router-devtools';
+import {
+  createRootRoute,
+  Outlet,
+  useRouterState,
+} from '@tanstack/react-router';
+import { AnimatePresence, motion } from 'motion/react';
+import { Toolbar } from '../components/toolbar';
 
 export const Route = createRootRoute({
-  component: () => (
-    <div className="h-screen">
-      <Outlet />
-      <TanStackRouterDevtools />
-    </div>
-  ),
-  notFoundComponent: () => (
-    <div className="flex flex-col items-center justify-center h-full text-center gap-7">
-      <p className="font-extrabold text-8xl tracking-widest">404</p>
-    </div>
-  ),
+  component: Root,
 });
+
+function Root() {
+  const { location } = useRouterState();
+
+  return (
+    <>
+      <AnimatePresence mode="wait">
+        <motion.main
+          key={location.pathname.startsWith('/t') ? 'tools' : 'home'}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.5 }}
+          className="p-5"
+        >
+          <Outlet />
+        </motion.main>
+      </AnimatePresence>
+      {location.pathname.startsWith('/t') && <Toolbar />}
+    </>
+  );
+}
